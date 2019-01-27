@@ -35,7 +35,7 @@ spec:
     - uri:
         prefix: "/"
     rewrite:
-      authority: {{REPOSITORY}}.{{NAMESPACE}}.svc.cluster.local
+      authority: {{REPOSITORY}}.{{NAMESPACE}}.api.pollination.cloud
     route:
     - destination:
         host: knative-ingressgateway.istio-system.svc.cluster.local
