@@ -9,7 +9,7 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: docker.io/antoinedao/helloworld-python:COMMIT_TAG
+            image: docker.io/pollination/helloworld-python:COMMIT_TAG
             env:
             - name: TARGET
               value: "Python Sample v1"
