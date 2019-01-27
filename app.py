@@ -5,7 +5,7 @@ from flask import Flask
 app = Flask(__name__)
 
 
-@app.route('/users')
+@app.route('/example')
 def hello_world():
     target = os.environ.get('TARGET', 'World')
     return 'Hello {}!\n'.format(target)
