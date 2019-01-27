@@ -13,6 +13,7 @@ sed -i "s/{{COMMIT_TAG}}/$COMMIT_TAG/g" service.yml
 sed -i "s/{{ORG}}/$ORG/g" service.yml
 sed -i "s/{{REPOSITORY}}/$REPOSITORY/g" service.yml
 sed -i "s/{{NAMESPACE}}/$NAMESPACE/g" service.yml
+sed -i "s/{{ENDPOINT}}/$ENDPOINT/g" service.yml
 
 
 kubectl --kubeconfig=kubeconfig apply -f service.yml

@@ -27,16 +27,16 @@ metadata:
     microservice: {{REPOSITORY}}
 spec:
   gateways:
-  - knative-shared-gateway.knative-serving.svc.cluster.local
+  - knative-ingressgateway.istio-system.svc.cluster.local
   hosts:
   - api.pollination.cloud
   http:
   - match:
     - uri:
-        prefix: "/"
+        prefix: "/{{ENDPOINT}}"
     rewrite:
       authority: {{REPOSITORY}}.{{NAMESPACE}}.api.pollination.cloud
     route:
     - destination:
-        host: knative-ingressgateway.istio-system.svc.cluster.local
+        host: knative-shared-gateway.knative-serving.svc.cluster.local
       weight: 100
