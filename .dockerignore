@@ -1,0 +1,6 @@
+venv
+.vscode
+kubeconfig
+deploy.sh
+kubeconfig.enc
+service.yml
