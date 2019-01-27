@@ -1,0 +1,21 @@
+services:
+- docker
+language: python
+python:
+- '3.6'
+jobs:
+  include:
+  - stage: deploy
+    if: branch = master AND (NOT type IN (pull_request))
+    provider: script
+    script: bash deploy.sh
+env:
+  global:
+  - COMMIT=${TRAVIS_COMMIT::8}
+  # Docker username
+  - secure: emlR9A+odAiz2+Y7h4a95WjwHoCkFzhlcqU9qx6qFQdyLhFkTWQXXxV7A250j3NgDz6AtNF3/lWwumluHjYhTwG2VaC8Wwxvj6gI9yTUWPVduRzvP3YxTAZz72ttVX9uYoQCN5ZaUUfBHNvrA1YOFNrWzB0otJB0VjAsn+i/fCHDw4z69rp4/RR4aaqKhaWn/Ry8T2qNmHEnsFk3x7ZLkF0KV9tK66ztcKMdigFCiY7gUovGA06EaZOcpwXksZo2MaeSsdu6emAxUwB7wfmMDoMhnCFWPfvde71ZZHuX0NljEl/lRJMsFoy3V2x4YFTUwVyQr3s2T3qdozdI/9SQfmSplpaLBvW5LcUrxcb4iJxS+31mN+iY73sqYEosXWy0KHxqq2kjz2h98ldZ2LRh+38QqA13x2M61plRFHSNRLqWkA9rbslIa5aOTV82kdFVUoAsreTFhqgfU87kW7A8lOCrGcXmJkbAH2QrF0URQDL5IsguguQZOCC3DTFwCUq4sskhJl7VYKAzzJRsqBLBPrs1oUMlNQ1nXxyj1OqcJsSPUGWhP8dyaTzOr4pXlLD/Y+ahwNaEcJW4AtsHssfGbMpXrjHCFCP/ybboAesyWPj6D2mEmz3Jefwu/+qQxNduQ1RxJ+yYvlpW9F7BgeFCLnsTz2LNrRXK/CCtXETynJA=
+  # Docker password
+  - secure: I8aIDjh6+O5aSCsyCmniI5waG9bjEm6Ri4VL/zqrBgdtpuVz5uX8OTQHeftSAxvUI5yGrEc9bUFkMEc/I/rq5Ya1JZ09slh6YLc+pV1LvKm+sNuFRcWnWsx/YbzFSspYvPfVW5W+vknYqfR8J9rWDJXgkwHG9k4dsetwBzLJZ5cc6m3liQOsPZ/Mr+BspEp5WNM4mwaLGWMbS/EJingp2cfmenTfUIROMw1j+DcV/XQQE+U6ENS2fZTgHs+ij88z6uzHCLUaDXzjJXC1ij5aH76Tnlp5WEsdN53I1PVljHk/HtLF/okVcL35HJS7h1e/6purks0BYfCKUiB7KAXNfh8GkDLE//3/LB7TDzs8zW+JjHyIlKAIJE/42pE7pZuJrEAGVag3/AGX71ejp5nGC1mDiWL5AEVKpfs7Ae6wq94bESzy3yEOh0UWNhOyj8hvWai0VLRMhBv+LKmhV2byluQtF8n5J+yvrJ+HsAnb7BQkz+aYBnQleBY8qdi0oJDOQHJpx8N8jtF4DxTVxBJzF5GpMEyPuoGFMxiA46xa5OcAb4LFe3u0Kj6ZurWLZ1yXtMWWB838m9fWEc9AJ4KqdKLpYMYEtL9budzerh0B5F9xXLU6HNZo4kyKwv1zWL7ZU4+2wCM0ex/XD9SoISzSgOXCuFEwtAGlBDxy8LaQ5uc=
+before_install:
+- openssl aes-256-cbc -K $encrypted_ef6e0359b415_key -iv $encrypted_ef6e0359b415_iv
+  -in kubeconfig.enc -out kubeconfig -d

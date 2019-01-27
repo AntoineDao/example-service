@@ -1,0 +1,41 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: helloworld-python
+  namespace: default
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: docker.io/antoinedao/helloworld-python:COMMIT_TAG
+            env:
+            - name: TARGET
+              value: "Python Sample v1"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: hello
+  namespace: default
+  labels:
+    app: api
+    microservice: hello
+spec:
+  gateways:
+  - knative-shared-gateway.knative-serving.svc.cluster.local
+  hosts:
+  - api.pollination.cloud
+  http:
+  - match:
+    - uri:
+        prefix: "/users"
+    - uri:
+        prefix: "/swaggerui"
+    rewrite:
+      authority: helloworld-python.default.svc.cluster.local
+    route:
+    - destination:
+        host: knative-ingressgateway.istio-system.svc.cluster.local
+      weight: 100
