@@ -1,18 +1,18 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: REPOSITORY
-  namespace: default
+  name: {{REPOSITORY}}
+  namespace: {{NAMESPACE}}
   labels:
     app: api
-    microservice: REPOSITORY
+    microservice: {{REPOSITORY}}
 spec:
   runLatest:
     configuration:
       revisionTemplate:
         spec:
           container:
-            image: docker.io/ORG/REPOSITORY:COMMIT_TAG
+            image: docker.io/{{ORG}}/{{REPOSITORY}}:{{COMMIT_TAG}}
             env:
             - name: TARGET
               value: "Python Sample v1"
@@ -20,11 +20,11 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: REPOSITORY
-  namespace: default
+  name: {{REPOSITORY}}
+  namespace: {{NAMESPACE}}
   labels:
     app: api
-    microservice: REPOSITORY
+    microservice: {{REPOSITORY}}
 spec:
   gateways:
   - knative-shared-gateway.knative-serving.svc.cluster.local
@@ -35,7 +35,7 @@ spec:
     - uri:
         prefix: "/"
     rewrite:
-      authority: helloworld-python.default.svc.cluster.local
+      authority: {{REPOSITORY}}.{{NAMESPACE}}.svc.cluster.local
     route:
     - destination:
         host: knative-ingressgateway.istio-system.svc.cluster.local

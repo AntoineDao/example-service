@@ -9,9 +9,10 @@ chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
 IFS=/ read ORG REPOSITORY <<< $TRAVIS_REPO_SLUG
-sed -i "s/COMMIT_TAG/$COMMIT_TAG/g" service.yml
-sed -i "s/ORG/$ORG/g" service.yml
-sed -i "s/REPOSITORY/$REPOSITORY/g" service.yml
+sed -i "s/{{COMMIT_TAG}}/$COMMIT_TAG/g" service.yml
+sed -i "s/{{ORG}}/$ORG/g" service.yml
+sed -i "s/{{REPOSITORY}}/$REPOSITORY/g" service.yml
+sed -i "s/{{NAMESPACE}}/$NAMESPACE/g" service.yml
 
 
 kubectl --kubeconfig=kubeconfig apply -f service.yml
