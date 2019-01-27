@@ -12,7 +12,7 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: docker.io/TRAVIS_REPO_SLUG:COMMIT_TAG
+            image: docker.io/ORG/REPOSITORY:COMMIT_TAG
             env:
             - name: TARGET
               value: "Python Sample v1"
