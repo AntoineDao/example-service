@@ -2,6 +2,20 @@
 
 This repository serves as an example of how to configure a microservice repository for deployment to the pollination kubernetes cluster. 
 
+## Local Development
+To facilitate local development you need to install Postgres locally and ensure the server has a user called `postgres` which does not require a password. Make sure the the server also has a database named `example` and then run the following command:
+> flask db upgrade
+
+You can then run flask normally using:
+> export FLASK_ENV=development
+> flask run
+
+## Local Testing
+You can run tests locally. To do so ensure you have a postgres server installed with a user called `postgres` that does not require password access and a database named `test`. You can then install `pytest` and run it:
+> pip install pytest
+> python -m pytest
+
+
 ## Continuous Deployment
 Configuring continuous deployment is done by running the `deploy.sh` script in the root of the repository. This script is called by running [semantic-release/exec](https://github.com/semantic-release/exec) and the release configuration set in the `.releaserc.json`.
 

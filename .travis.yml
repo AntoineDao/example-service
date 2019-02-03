@@ -1,16 +1,25 @@
-services:
-- docker
 language: python
 python:
 - '3.6'
 jobs:
   include:
+  - stage: test
+    service:
+    - postgres
+    before_script:
+    - psql -c 'create database test;' -U postgres
+    script:
+    - pip install -r requirements.txt
+    - pip install pytest
+    - python -m pytest
   - stage: deploy
+    services:
+    - docker
     if: branch = master AND (NOT type IN (pull_request))
     language: node_js
     node_js:
     - '8'
-    script: 
+    script:
     - npm install @semantic-release/exec
     - npx semantic-release
 env:
