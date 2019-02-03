@@ -4,3 +4,4 @@ kubeconfig
 deploy.sh
 kubeconfig.enc
 service.yml
+test

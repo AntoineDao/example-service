@@ -12,7 +12,7 @@ RUN pip install Flask
 
 # Service must listen to $PORT environment variable.
 # This default value facilitates local development.
-ENV PORT 8080
+ENV FLASK_PORT 8080
 
 # Run the web service on container startup.
-CMD ["python", "app.py"]
+CMD ["flask", "run", "-p", "$FLASK_PORT"]
