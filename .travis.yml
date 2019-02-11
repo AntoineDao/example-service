@@ -13,9 +13,13 @@ jobs:
     - pip install pytest
     - python -m pytest
   - stage: deploy
+    if: branch = master AND (NOT type IN (pull_request))
     services:
     - docker
-    if: branch = master AND (NOT type IN (pull_request))
+    before_install:
+    - openssl aes-256-cbc -K $encrypted_ef6e0359b415_key -iv $encrypted_ef6e0359b415_iv
+      -in kubeconfig.enc -out kubeconfig -d
+    - npm i -g npm@6.6.0
     language: node_js
     node_js:
     - '8'
@@ -30,7 +34,3 @@ env:
   - secure: nXKI3VzCL4k3OXyVbVEwGDrUCnBXPQ8a/0mkx1dOhnvmASYuImBLsMlYZvVdAyuSYfQqQLIDxQwGkgfUA3jZqEZvHz6C7CK3ENIXlkNmr+cOPDBq6drpgw75Ju6MZoreDcEKdOSurFsM3dTk9jE1QGJeqkO7x7E/l81iLxccfDt1ZNVfah6MRYeqss4hMBkAADkz3XkmCaUjHp8OO+wNry8XdRMiArloyAL65oCVjgWBEFiUvO2IMx6sHVskV5Kvfi0ftAMhd+h2knwodq2sgdx6pJqzF/0+3Qw6iEtQ8U3zJgmfvugkd7ZVME3JP+w49VHTfJubZyp5s5xHaqU4DpVxPWVj/cyAKC4Wy9Yax+AoP6K3uuSOfYSIGaFETjqs6cmgcDSDhXvZHbcPSSF8ZcW308IupOHrHzNWWBUzrnxgbyaHY8ua8lkq90W7DCJVhA8lG55qRx5gSrambB3V+VeN4mqs2cvjk88655vVItR1sT5LK974bFPhCxNe79r2Z8NU1BqOQCkN3nl1YZH7LmHNbfRbF8RcVGLfr0hY1mtf2SHHDsBcNu5++FWGFeRJiucsE2SVd2443AFw0BbACg7HtRgg18DHb3Z0+5AnZsoBRLDSRR9HJVbagdfrIF+bLacxp6jtigfsJstKprF29WVUYAnse2XbAaRof4Vtc0k=
   - secure: ZDktb8uzJSUX4QZJBQYJulX977gLF4+Q8hD8f45EAi8v2NunmMxLFt/Jp7qLPiJm7c08lsoudvc1O2a7OyArhqRqCsM86Fs8jheyeq7q+oz0keh0V17A6QJLJoteJHygJt95lGHV9K8zvzXmWLLe1IEmO28vbRL1xMtj5ult99bBAr15R9LzUbgFfRQhSpUVWnk/eatdrN500YNwvZtTiJ5YptcC4SKlCMiB1v/jQT3nIzRlOlP1zXQmF41Whaze//T6XeFQd+dgC5Y2aR4hEZTBiuTLn1AixfwEEczuWGBI1huh2ijgsgVSxIUqb8E0X1KGSmFKTreIyGDGWdVr7r1yglBPaC53mR0XLFnFH3OOb7TGBZfHGvvMh5kDXSanq+M7GXtedv+VRevVeEX9QMUINemlD0IRnmQ+mv7QtN+CrlKjfCFuE9XUzzORBIdwc5s114OB7noqFnyDRnu9Ja/gODkkNtycGMLmUP+cUovvlVHT4wlgeA2qOlpYchrXPCenxVCY8l+Yde0iPKC+OYpphZDuoNh/VQmzk1z0v2hYekRBM+speZoP4h8n1OxceZPnfTodJgVNVHko9CVm8kDLkwN3418Cn12wu5xS9CtVEB04MxlXpZ5RR5MUmU1ITdUTnNhZGmkDEZLdMAdlxgIi6bB5EFPwrgfH2q0NcpI=
   - secure: g2AdmXWlvhqLAqHE3PzseDqz9UttZtjJp4jlTbArOB+c3Qjeu5Sogx3UijATAryJtCegqu7Tz59FBlyeDs1JPGK+4XkypP7eisIieaHn7stXAuU0/K8O3eXBCEPV60EUzZ1uM6ZlI6ragnaWgE9KAN3/chR7sHlobHe6dd59TEIvVf0gcOU1xEfrNozdfbI63L3Ug2oEF2l4o6J/XtEpdMHJcMWST/vYp2jmge8z+fTXb0LaWKLD+XpEsGRoeK1oZPUANahQzQygdfdNptYRvoh9TJuEbAiNz5dVyFBUue/7XJo9gMO2qV5d6Mhk0MMswoR7hQ4PNM1LfkleeeIscKwI1wd1TT69pZkeyLQ9SyK7phsn2iNbkNpPSyNWm79NJB1S/JJrV/pC+WbZcxaMiMQ7XZ+gRm39ixflHI9UT1O1GwpGapqdKzk+T1GmtSF1twbf3xivvMJt1hu6NdV0qdaeiXNnHuXrbpivN8Ch4RBACjZUW1y5kS2j5G0XVrZuurWe3H6NHscsgkvX1nNJTcZ11q2RiUy1DJx2r5ealj/9eFdxkjoE5klcuZ30hLqUCakwPKwygwOT874b8az9aUgYlhEkNexw5FKgFLdWhO9tNadRwsJw51WYM501BGQLsvn0Ft9xPzzQUrf6mzgSho94lHnos8zi5iO9TWV6bnc=
-before_install:
-- openssl aes-256-cbc -K $encrypted_ef6e0359b415_key -iv $encrypted_ef6e0359b415_iv
-  -in kubeconfig.enc -out kubeconfig -d
-- npm i -g npm@6.6.0
