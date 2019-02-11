@@ -1,12 +1,14 @@
 from flask import request
 from flask_restplus import Resource, Namespace
-from app.resources.schemas import example
+from app.resources.schemas import example, bucket_file
 from app.service.crud import get_all_examples, save_example, get_example
+from app.service.bucket import list_files, get_upload_url
 
 api = Namespace('example', description='example related operations')
 api._path = '/'
 
 example_schema = api.model('example', example)
+bucket_file_schema = api.model('bucket file', bucket_file)
 
 @api.route('/')
 class List(Resource):
@@ -61,3 +63,19 @@ class UserGreeting(Resource):
             api.abort(404)
         else:
             return "{} says hello!".format(example['username'])
+
+@api.route('/<public_id>/buckets')
+@api.param('public_id', 'The user identifier')
+class BucketOperations(Resource):
+    @api.doc('list files')
+    def get(self, public_id):
+        return list_files(public_id)
+    
+    @api.doc('get an upload link')
+    @api.expect(bucket_file_schema, validate=True, skip_none=False)
+    def post(self, public_id):
+        data = request.json
+        try:
+            return get_upload_url(public_id, data['file_name'])
+        except Exception as e:
+            return api.abort(500, e)
