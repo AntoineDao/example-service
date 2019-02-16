@@ -29,6 +29,11 @@ spec:
                 secretKeyRef:
                   name: service-secrets
                   key: db-server
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: service-secrets
+                  key: db-port
             - name: BUCKET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
