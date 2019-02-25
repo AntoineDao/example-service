@@ -5,10 +5,12 @@ FROM python
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
-COPY . .
 
 # Install production dependencies.
-RUN pip install Flask
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
 
 # Service must listen to $PORT environment variable.
 # This default value facilitates local development.
