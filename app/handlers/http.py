@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource, Namespace
 from app.resources.schemas import example, bucket_file
 from app.service.crud import get_all_examples, save_example, get_example
-from app.service.bucket import list_files, get_upload_url
+from app.service.bucket import list_files, get_upload_url, get_download_url
 
 api = Namespace('example', description='example related operations')
 api._path = '/'
@@ -79,3 +79,11 @@ class BucketOperations(Resource):
             return get_upload_url(public_id, data['file_name'])
         except Exception as e:
             return api.abort(500, e)
+
+@api.route('/<public_id>/buckets/<file_name>')
+@api.param('public_id', 'The user identifier')
+@api.param('file_name', 'A file name')
+class BucketFileOperations(Resource):
+    @api.doc('get download link for file')
+    def get(self, public_id, file_name):
+        return get_download_url(public_id, file_name)

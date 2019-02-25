@@ -18,10 +18,19 @@ client = session.client('s3',
 
 def get_upload_url(user_id, file_name, bucket=bucket_name):
     key = 'users/{user_id}/uploads/{file_name}'.format(user_id=user_id, file_name=file_name)
-    url = client.generate_presigned_url('put_object',
+    url = client.generate_presigned_url(ClientMethod='put_object',
                                         Params={'Bucket': bucket, 'Key':key},
                                         ExpiresIn=bucket_url_expiration,
                                         HttpMethod='PUT')
+    return url
+
+def get_download_url(user_id, file_name, bucket=bucket_name):
+    key = 'users/{user_id}/uploads/{file_name}'.format(user_id=user_id, file_name=file_name)
+    # Generate the URL to get 'key-name' from 'bucket-name'
+    url = client.generate_presigned_url(ClientMethod='get_object',
+                                    Params={ 'Bucket': bucket_name, 'Key': key},
+                                    ExpiresIn=bucket_url_expiration,
+                                    HttpMethod='GET')
     return url
 
 def list_files(user_id, bucket=bucket_name):
