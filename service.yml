@@ -1,5 +1,5 @@
-apiVersion: serving.knative.dev/v1alpha1
-kind: Service
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   name: {{REPOSITORY}}
   namespace: {{NAMESPACE}}
@@ -7,43 +7,65 @@ metadata:
     app: api
     microservice: {{REPOSITORY}}
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: docker.io/{{ORG}}/{{REPOSITORY}}:{{COMMIT_TAG}}
-            env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: service-secrets
-                  key: db-user
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: service-secrets
-                  key: db-password
-            - name: DB_SERVER
-              valueFrom:
-                secretKeyRef:
-                  name: service-secrets
-                  key: db-server
-            - name: DB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: service-secrets
-                  key: db-port
-            - name: BUCKET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: service-secrets
-                  key: bucket-access-key
-            - name: BUCKET_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: service-secrets
-                  key: bucket-secret-access-key
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api
+        microservice: {{REPOSITORY}}
+    spec:
+      containers:
+        - name: {{REPOSITORY}}
+          image: docker.io/{{ORG}}/{{REPOSITORY}}:{{COMMIT_TAG}}
+          env:
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: service-secrets
+                key: db-user
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: service-secrets
+                key: db-password
+          - name: DB_SERVER
+            valueFrom:
+              secretKeyRef:
+                name: service-secrets
+                key: db-server
+          - name: DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: service-secrets
+                key: db-port
+          - name: BUCKET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: service-secrets
+                key: bucket-access-key
+          - name: BUCKET_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: service-secrets
+                key: bucket-secret-access-key
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{REPOSITORY}}
+  namespace: {{NAMESPACE}}
+  labels:
+    app: api
+    microservice: {{REPOSITORY}}
+spec:
+  selector:
+    app: api
+    microservice: {{REPOSITORY}}
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -55,16 +77,15 @@ metadata:
     microservice: {{REPOSITORY}}
 spec:
   gateways:
-  - knative-shared-gateway.knative-serving.svc.cluster.local
+    - api-gateway
   hosts:
-  - api.pollination.cloud
+    - "*"
   http:
-  - match:
-    - uri:
-        prefix: "/{{ENDPOINT}}"
-    rewrite:
-      authority: {{REPOSITORY}}.{{NAMESPACE}}.api.pollination.cloud
-    route:
-    - destination:
-        host: knative-ingressgateway.istio-system.svc.cluster.local
-      weight: 100
+    - match:
+        - uri:
+            prefix: "/{{ENDPOINT}}"
+      route:
+        - destination:
+            port:
+              number: 80
+            host: {{REPOSITORY}}
